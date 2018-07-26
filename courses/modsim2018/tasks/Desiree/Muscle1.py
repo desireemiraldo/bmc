@@ -22,7 +22,7 @@ class Muscle:
         self.tau_act = 15e-3
         self.dt = dt
         
-        self.a = 0.01 #inital conditional for ativation
+        self.a = .01 #inital conditional for ativation
         self.Lnorm_see = 0
         self.Lnorm_ce = 0
         self.Fnorm_tendon = 0
@@ -87,9 +87,13 @@ class Muscle:
             self.Fnorm_kpe = 0
         else: 
             self.Fnorm_kpe = ((self.Lnorm_ce-1)/(self.Umax*1))**2
+            
+            
         '''
         
         self.Fnorm_kpe = (np.exp(self.kpe*(self.Lnorm_ce-1)/self.epsilon0M) - 1)/(np.exp(self.kpe) - 1)
+        
+        
 
         return self.Fnorm_kpe
     
@@ -115,13 +119,10 @@ class Muscle:
         
 
         self.Fnorm_CE = max(0.001,min(self.FMlen*self.a*self.F0 - 0.001, self.Fnorm_CE))
-
+        b = None
         if self.Fnorm_CE > self.a*self.F0:
-
             b = ((2 + 2/self.Af)*(self.a*self.F0*self.FMlen - self.Fnorm_CE))/(self.FMlen-1)
-
         elif self.Fnorm_CE <= self.a*self.F0:
-
             b = self.a*self.F0 + self.Fnorm_CE/self.Af
 
         self.Lnorm_cedot = (.25 + .75*self.a)*self.Vmax*((self.Fnorm_CE - self.a*self.F0)/b)
